@@ -12,11 +12,26 @@ export default async function DashboardPage() {
   }
 
   // Fetch user profile
-  const { data: profile } = await supabase
+  let { data: profile } = await supabase
     .from('profiles')
     .select('*')
     .eq('id', user.id)
     .single()
+
+  // Fix: synchronize role if missing or different from metadata
+  const metadataRole = user?.user_metadata?.role
+  if (metadataRole && (!profile || profile.role !== metadataRole)) {
+    const { data: updatedProfile, error } = await supabase
+      .from('profiles')
+      .update({ role: metadataRole })
+      .eq('id', user.id)
+      .select()
+      .single()
+    
+    if (!error && updatedProfile) {
+      profile = updatedProfile
+    }
+  }
 
   // Fetch user tasks
   const { data: tasks } = await supabase

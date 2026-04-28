@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { createGoogleGenerativeAI } from '@ai-sdk/google'
 
 const google = createGoogleGenerativeAI({
-  apiKey: 'AIzaSyDrjPINIsBpJ2DSGhPk96EjN-hYc5AfJbs',
+  apiKey: process.env.GEMINI_API_KEY || '',
 })
 
 export async function POST(req: Request) {

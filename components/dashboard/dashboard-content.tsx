@@ -42,6 +42,7 @@ const quickActions = [
   { icon: MessageSquare, label: 'Messages', href: '/messages', color: 'from-teal-500 to-emerald-500' },
   { icon: BookOpen, label: 'Research', href: '/research', color: 'from-purple-500 to-pink-500' },
   { icon: Newspaper, label: 'Tech News', href: '/news', color: 'from-orange-500 to-red-500' },
+  { icon: Users, label: 'Projects', href: '/projects', color: 'from-indigo-500 to-violet-500' },
 ]
 
 export function DashboardContent({ user, profile, tasks, announcements, unreadMessages }: DashboardContentProps) {
