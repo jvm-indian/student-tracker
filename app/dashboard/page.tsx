@@ -20,11 +20,18 @@ export default async function DashboardPage() {
 
   // Fix: synchronize role if missing or different from metadata
   const metadataRole = user?.user_metadata?.role
-  if (metadataRole && (!profile || profile.role !== metadataRole)) {
+  if (!profile || profile.role !== metadataRole) {
+    const roleToSet = metadataRole || 'student'
+    const fullNameToSet = user?.user_metadata?.full_name || user?.email?.split('@')[0]
+    
     const { data: updatedProfile, error } = await supabase
       .from('profiles')
-      .update({ role: metadataRole })
-      .eq('id', user.id)
+      .upsert({ 
+        id: user.id, 
+        email: user.email, 
+        role: roleToSet,
+        full_name: fullNameToSet
+      })
       .select()
       .single()
     

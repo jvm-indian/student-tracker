@@ -14,11 +14,32 @@ export default async function ProjectsPage() {
   }
 
   // Fetch user profile
-  const { data: profile } = await supabase
+  let { data: profile } = await supabase
     .from('profiles')
     .select('*')
     .eq('id', user.id)
     .single()
+
+  const metadataRole = user?.user_metadata?.role
+  if (!profile || profile.role !== metadataRole) {
+    const roleToSet = metadataRole || 'student'
+    const fullNameToSet = user?.user_metadata?.full_name || user?.email?.split('@')[0]
+    
+    const { data: updatedProfile } = await supabase
+      .from('profiles')
+      .upsert({ 
+        id: user.id, 
+        email: user.email, 
+        role: roleToSet,
+        full_name: fullNameToSet
+      })
+      .select()
+      .single()
+    
+    if (updatedProfile) {
+      profile = updatedProfile
+    }
+  }
 
   const role = profile?.role || 'student'
 
