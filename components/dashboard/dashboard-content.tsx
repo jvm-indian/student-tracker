@@ -12,6 +12,10 @@ import {
 import type { User } from '@supabase/supabase-js'
 import { formatDistanceToNow } from 'date-fns'
 
+import { StudentPortal } from '@/components/projects/student-portal'
+import { GuidePortal } from '@/components/projects/guide-portal'
+import { AdminPortal } from '@/components/projects/admin-portal'
+
 interface DashboardContentProps {
   user: User
   profile: {
@@ -42,7 +46,6 @@ const quickActions = [
   { icon: MessageSquare, label: 'Messages', href: '/messages', color: 'from-teal-500 to-emerald-500' },
   { icon: BookOpen, label: 'Research', href: '/research', color: 'from-purple-500 to-pink-500' },
   { icon: Newspaper, label: 'Tech News', href: '/news', color: 'from-orange-500 to-red-500' },
-  { icon: Users, label: 'Projects', href: '/projects', color: 'from-indigo-500 to-violet-500' },
 ]
 
 export function DashboardContent({ user, profile, tasks, announcements, unreadMessages }: DashboardContentProps) {
@@ -163,6 +166,25 @@ export function DashboardContent({ user, profile, tasks, announcements, unreadMe
               </Link>
             )
           })}
+        </div>
+      </motion.div>
+
+      {/* Role-Specific Features (Project Portals) */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.25 }}
+        className="mb-8"
+      >
+        <h2 className="text-xl font-bold text-foreground mb-4 border-b border-border pb-2">
+          {profile?.role === 'admin' ? 'Administration & Approvals Hub' : 
+           (profile?.role === 'guide' || profile?.role === 'teacher') ? 'Guide Evaluation Portal' : 
+           'Your Project Workspace'}
+        </h2>
+        <div className="mt-4">
+          {(!profile?.role || profile.role === 'student') && <StudentPortal user={user} profile={profile} />}
+          {(profile?.role === 'guide' || profile?.role === 'teacher') && <GuidePortal user={user} profile={profile} />}
+          {profile?.role === 'admin' && <AdminPortal user={user} profile={profile} />}
         </div>
       </motion.div>
 
