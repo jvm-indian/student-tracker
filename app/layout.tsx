@@ -2,19 +2,9 @@ import type { Metadata, Viewport } from 'next'
 
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
-import { Inter, Space_Grotesk } from 'next/font/google'
-
-const inter = Inter({ 
-  subsets: ['latin'], 
-  variable: '--font-inter',
-  display: 'swap'
-})
-
-const spaceGrotesk = Space_Grotesk({ 
-  subsets: ['latin'], 
-  variable: '--font-space-grotesk',
-  display: 'swap'
-})
+// Fonts removed due to Vercel build fetch error
+const inter = { variable: 'font-inter' }
+const spaceGrotesk = { variable: 'font-space-grotesk' }
 
 export const metadata: Metadata = {
   title: 'TechEd Research Hub | Engineering Education Platform',
