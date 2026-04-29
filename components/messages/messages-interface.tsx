@@ -197,10 +197,8 @@ export function MessagesInterface({ currentUserId, conversations: initialConvers
     if (chatWith && !hasAutoStarted) {
       setHasAutoStarted(true)
       startNewConversation(chatWith)
-      // Clean up URL without triggering a full page reload or Next.js navigation
-      window.history.replaceState(null, '', '/messages')
     }
-  }, [chatWith, hasAutoStarted, router])
+  }, [chatWith, hasAutoStarted])
 
   const getRoleIcon = (role: string | null) => {
     switch (role) {
