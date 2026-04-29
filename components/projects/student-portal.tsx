@@ -22,8 +22,9 @@ export function StudentPortal({ user, profile }: PortalProps) {
   const [submission, setSubmission] = useState<any>(null)
   const [guide, setGuide] = useState<any>(null)
   const [teamName, setTeamName] = useState('')
-  const [reportUrl, setReportUrl] = useState('')
-  const [certUrl, setCertUrl] = useState('')
+  const [reportFile, setReportFile] = useState<File | null>(null)
+  const [certFile, setCertFile] = useState<File | null>(null)
+  const [isUploading, setIsUploading] = useState(false)
   const supabase = createClient()
 
   useEffect(() => {
@@ -106,23 +107,64 @@ export function StudentPortal({ user, profile }: PortalProps) {
   const handleSubmitFiles = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!team) return
+    
     try {
+      setIsUploading(true)
+      let finalReportUrl = submission?.report_url || ''
+      let finalCertUrl = submission?.certificate_url || ''
+      
+      // Upload Report
+      if (reportFile) {
+        const fileExt = reportFile.name.split('.').pop()
+        const fileName = `${team.id}/report_${Date.now()}.${fileExt}`
+        
+        const { error: uploadError } = await supabase.storage
+          .from('projects')
+          .upload(fileName, reportFile, { upsert: true })
+          
+        if (uploadError) throw uploadError
+        
+        const { data } = supabase.storage.from('projects').getPublicUrl(fileName)
+        finalReportUrl = data.publicUrl
+      }
+      
+      // Upload Certificate
+      if (certFile) {
+        const fileExt = certFile.name.split('.').pop()
+        const fileName = `${team.id}/certificate_${Date.now()}.${fileExt}`
+        
+        const { error: uploadError } = await supabase.storage
+          .from('projects')
+          .upload(fileName, certFile, { upsert: true })
+          
+        if (uploadError) throw uploadError
+        
+        const { data } = supabase.storage.from('projects').getPublicUrl(fileName)
+        finalCertUrl = data.publicUrl
+      }
+      
+      // Save to database
       if (submission) {
         const { error } = await supabase
           .from('project_submissions')
-          .update({ report_url: reportUrl, certificate_url: certUrl })
+          .update({ report_url: finalReportUrl, certificate_url: finalCertUrl })
           .eq('id', submission.id)
         if (error) throw error
       } else {
         const { error } = await supabase
           .from('project_submissions')
-          .insert({ team_id: team.id, report_url: reportUrl, certificate_url: certUrl })
+          .insert({ team_id: team.id, report_url: finalReportUrl, certificate_url: finalCertUrl })
         if (error) throw error
       }
-      toast.success('Files submitted successfully!')
+      
+      toast.success('Files uploaded and submitted successfully!')
       fetchTeamData()
+      setReportFile(null)
+      setCertFile(null)
     } catch (error: any) {
       toast.error(error.message)
+    } finally {
+      setIsUploading(false)
     }
   }
 
@@ -196,26 +238,30 @@ export function StudentPortal({ user, profile }: PortalProps) {
         <CardContent className="space-y-6">
           <form onSubmit={handleSubmitFiles} className="space-y-4">
             <div className="space-y-2">
-              <Label>Report Document URL</Label>
+              <Label>Upload Report Document (PDF/Word)</Label>
               <Input 
-                value={reportUrl} 
-                onChange={e => setReportUrl(e.target.value)} 
-                placeholder="Link to PDF/Doc" 
-                defaultValue={submission?.report_url}
+                type="file"
+                accept=".pdf,.doc,.docx"
+                onChange={e => setReportFile(e.target.files?.[0] || null)} 
               />
+              {submission?.report_url && !reportFile && (
+                <p className="text-xs text-muted-foreground">Current: <a href={submission.report_url} target="_blank" rel="noreferrer" className="text-primary hover:underline">View File</a></p>
+              )}
             </div>
             <div className="space-y-2">
-              <Label>Certificate Image/PDF URL</Label>
+              <Label>Upload Certificate (PDF/Image)</Label>
               <Input 
-                value={certUrl} 
-                onChange={e => setCertUrl(e.target.value)} 
-                placeholder="Link to Certificate" 
-                defaultValue={submission?.certificate_url}
+                type="file"
+                accept=".pdf,image/*"
+                onChange={e => setCertFile(e.target.files?.[0] || null)} 
               />
+              {submission?.certificate_url && !certFile && (
+                <p className="text-xs text-muted-foreground">Current: <a href={submission.certificate_url} target="_blank" rel="noreferrer" className="text-primary hover:underline">View File</a></p>
+              )}
             </div>
-            <Button type="submit" className="w-full gap-2">
-              <Upload className="w-4 h-4"/>
-              {submission ? 'Update Submissions' : 'Submit Files'}
+            <Button type="submit" className="w-full gap-2" disabled={isUploading || (!reportFile && !certFile && !submission)}>
+              {isUploading ? <Loader2 className="w-4 h-4 animate-spin"/> : <Upload className="w-4 h-4"/>}
+              {isUploading ? 'Uploading...' : submission ? 'Update Files' : 'Submit Files'}
             </Button>
           </form>
 

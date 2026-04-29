@@ -37,11 +37,11 @@ export function AdminPortal({ user, profile }: PortalProps) {
       if (teamsError) throw teamsError
       setTeams(teamsData || [])
 
-      // Fetch all guides/teachers
+      // Fetch all guides/teachers/students (anyone who can be assigned as a guide)
       const { data: guidesData, error: guidesError } = await supabase
         .from('profiles')
-        .select('id, full_name, email')
-        .in('role', ['guide', 'teacher'])
+        .select('id, full_name, email, role')
+        .neq('role', 'admin')
       
       if (guidesError) throw guidesError
       setGuides(guidesData || [])
@@ -121,7 +121,9 @@ export function AdminPortal({ user, profile }: PortalProps) {
                             </SelectTrigger>
                             <SelectContent>
                               {guides.map(g => (
-                                <SelectItem key={g.id} value={g.id}>{g.full_name || g.email}</SelectItem>
+                                <SelectItem key={g.id} value={g.id}>
+                                  {g.full_name || g.email} <span className="text-muted-foreground ml-1">({g.role})</span>
+                                </SelectItem>
                               ))}
                             </SelectContent>
                           </Select>
