@@ -121,8 +121,8 @@ export default function SignUpPage() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="student">Student</SelectItem>
-                      <SelectItem value="teacher">Teacher/Professor</SelectItem>
                       <SelectItem value="guide">Research Guide</SelectItem>
+                      <SelectItem value="admin">Administrator</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
