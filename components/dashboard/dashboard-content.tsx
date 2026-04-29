@@ -176,15 +176,17 @@ export function DashboardContent({ user, profile, tasks, announcements, unreadMe
         transition={{ delay: 0.25 }}
         className="mb-8"
       >
-        <h2 className="text-xl font-bold text-foreground mb-4 border-b border-border pb-2">
-          {profile?.role === 'admin' ? 'Administration & Approvals Hub' : 
-           (profile?.role === 'guide' || profile?.role === 'teacher') ? 'Guide Evaluation Portal' : 
-           'Your Project Workspace'}
-        </h2>
-        <div className="mt-4">
-          {(!profile?.role || profile.role === 'student') && <StudentPortal user={user} profile={profile} />}
-          {(profile?.role === 'guide' || profile?.role === 'teacher') && <GuidePortal user={user} profile={profile} />}
-          {profile?.role === 'admin' && <AdminPortal user={user} profile={profile} />}
+        <div className="bg-card rounded-xl border border-border p-6 shadow-sm">
+          <h2 className="text-xl font-bold text-foreground mb-4 border-b border-border pb-2">
+            {profile?.role === 'admin' ? 'Administration & Approvals Hub' : 
+             profile?.role === 'guide' ? 'Guide Evaluation Portal' : 
+             'Your Project Workspace'}
+          </h2>
+          <div className="mt-4">
+            {(!profile?.role || profile.role === 'student') && <StudentPortal user={user} profile={profile} />}
+            {profile?.role === 'guide' && <GuidePortal user={user} profile={profile} />}
+            {profile?.role === 'admin' && <AdminPortal user={user} profile={profile} />}
+          </div>
         </div>
       </motion.div>
 

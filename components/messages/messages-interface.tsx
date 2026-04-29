@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import { useSearchParams, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -63,8 +64,12 @@ export function MessagesInterface({ currentUserId, conversations: initialConvers
   const [isLoading, setIsLoading] = useState(false)
   const [isSending, setIsSending] = useState(false)
   const [newChatOpen, setNewChatOpen] = useState(false)
+  const [hasAutoStarted, setHasAutoStarted] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
   const supabase = createClient()
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const chatWith = searchParams.get('chatWith')
 
   // Get other participant in conversation
   const getOtherParticipant = (conv: Conversation): Profile => {
@@ -179,6 +184,16 @@ export function MessagesInterface({ currentUserId, conversations: initialConvers
 
     setNewChatOpen(false)
   }
+
+  // Auto-start conversation if chatWith param is present
+  useEffect(() => {
+    if (chatWith && !hasAutoStarted && allUsers.length > 0) {
+      setHasAutoStarted(true)
+      startNewConversation(chatWith)
+      // Clean up URL without triggering a full page reload
+      router.replace('/messages')
+    }
+  }, [chatWith, hasAutoStarted, allUsers, router])
 
   const getRoleIcon = (role: string | null) => {
     switch (role) {

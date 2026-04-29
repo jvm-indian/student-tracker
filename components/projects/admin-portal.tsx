@@ -41,7 +41,6 @@ export function AdminPortal({ user, profile }: PortalProps) {
       const { data: guidesData, error: guidesError } = await supabase
         .from('profiles')
         .select('id, full_name, email, role')
-        .neq('role', 'admin')
       
       if (guidesError) throw guidesError
       setGuides(guidesData || [])

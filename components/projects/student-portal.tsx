@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Loader2, Users, FileText, Award, Upload } from 'lucide-react'
+import { Loader2, Users, FileText, Award, Upload, MessageSquare } from 'lucide-react'
 import { toast } from 'sonner'
 import type { User } from '@supabase/supabase-js'
 
@@ -218,9 +218,16 @@ export function StudentPortal({ user, profile }: PortalProps) {
             </ul>
           </div>
           {guide ? (
-            <div className="p-3 border rounded-md border-border bg-card">
-              <p className="text-sm text-muted-foreground">Assigned Guide</p>
-              <p className="font-medium">{guide.full_name || guide.email}</p>
+            <div className="p-3 border rounded-md border-border bg-card flex justify-between items-center">
+              <div>
+                <p className="text-sm text-muted-foreground">Assigned Guide</p>
+                <p className="font-medium">{guide.full_name || guide.email}</p>
+              </div>
+              <Button size="sm" variant="outline" className="gap-2" asChild>
+                <a href={`/messages?chatWith=${guide.id}`}>
+                  <MessageSquare className="w-4 h-4" /> Message
+                </a>
+              </Button>
             </div>
           ) : (
             <div className="p-3 border border-dashed rounded-md border-border text-center text-sm text-muted-foreground">

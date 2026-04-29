@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Loader2, Users, CheckCircle, FileText } from 'lucide-react'
+import { Loader2, Users, CheckCircle, FileText, MessageSquare } from 'lucide-react'
 import { toast } from 'sonner'
 import type { User } from '@supabase/supabase-js'
 
@@ -90,9 +90,16 @@ export function GuidePortal({ user, profile }: PortalProps) {
                     <CardContent className="space-y-4">
                       <div>
                         <p className="text-sm font-medium mb-2">Team Members:</p>
-                        <ul className="text-sm text-muted-foreground space-y-1 pl-4 list-disc">
+                        <ul className="text-sm text-muted-foreground space-y-2 pl-4">
                           {team.team_members?.map((m: any) => (
-                            <li key={m.id}>{m.profiles?.full_name || m.profiles?.email}</li>
+                            <li key={m.id} className="flex justify-between items-center bg-card p-2 rounded-md border border-border">
+                              <span>{m.profiles?.full_name || m.profiles?.email}</span>
+                              <Button size="sm" variant="ghost" className="h-6 px-2 gap-1" asChild>
+                                <a href={`/messages?chatWith=${m.student_id}`}>
+                                  <MessageSquare className="w-3 h-3" /> Message
+                                </a>
+                              </Button>
+                            </li>
                           ))}
                         </ul>
                       </div>
