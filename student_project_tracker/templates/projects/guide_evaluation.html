@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Evaluate Project: {{ project.title }}</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="id_guide_rating" class="form-label">Assign Marks (out of 100)</label>
+                        {{ form.guide_rating }}
+                    </div>
+                    <div class="mb-3 form-check">
+                        {{ form.publication_status }}
+                        <label class="form-check-label" for="id_publication_status">
+                            Has this project been published?
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Submit Evaluation</button>
+                    <a href="{% url 'guide_portal' %}" class="btn btn-outline-secondary w-100 mt-2">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

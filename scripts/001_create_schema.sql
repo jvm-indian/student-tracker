@@ -175,6 +175,12 @@ CREATE POLICY "messages_select" ON public.messages FOR SELECT
   USING (EXISTS (SELECT 1 FROM conversations WHERE id = conversation_id AND (participant_1 = auth.uid() OR participant_2 = auth.uid())));
 CREATE POLICY "messages_insert" ON public.messages FOR INSERT 
   WITH CHECK (auth.uid() = sender_id);
+CREATE POLICY "messages_update" ON public.messages FOR UPDATE 
+  USING (auth.uid() = sender_id)
+  WITH CHECK (auth.uid() = sender_id);
+
+-- Enable Realtime for messages
+ALTER PUBLICATION supabase_realtime ADD TABLE public.messages;
 
 -- RLS Policies for AI conversations
 CREATE POLICY "ai_conversations_select" ON public.ai_conversations FOR SELECT USING (auth.uid() = user_id);

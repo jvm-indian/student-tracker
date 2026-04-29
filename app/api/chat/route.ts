@@ -20,7 +20,7 @@ export async function POST(req: Request) {
   const { data: { user } } = await supabase.auth.getUser()
 
   const result = streamText({
-    model: google('gemini-2.5-flash'),
+    model: google('gemini-1.5-flash'),
     system: `You are TechEd AI, an advanced research assistant for engineering students and educators. 
 You help with:
 - Explaining complex engineering concepts

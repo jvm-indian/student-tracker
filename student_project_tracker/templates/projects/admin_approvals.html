@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2 class="mb-4">Admin Portal: Marks Approvals</h2>
+        <div class="mb-3">
+            <a href="{% url 'admin_allotment' %}" class="btn btn-outline-primary">Back to Allotment</a>
+        </div>
+        
+        {% if projects %}
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Project Title</th>
+                            <th>Guide</th>
+                            <th>Marks Assigned</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for project in projects %}
+                        <tr>
+                            <td>{{ project.title }}</td>
+                            <td>{{ project.guide.username }}</td>
+                            <td>{{ project.marks }}</td>
+                            <td>
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="project_id" value="{{ project.id }}">
+                                    <button type="submit" class="btn btn-sm btn-success">Approve Marks</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-success">
+                All evaluations have been approved.
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

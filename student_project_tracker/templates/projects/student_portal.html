@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2 class="mb-4">Student Project Portal</h2>
+        
+        {% if projects %}
+            {% for project in projects %}
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">{{ project.title }}</h5>
+                        <span class="badge bg-light text-dark">{{ project.status }}</span>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Domain:</strong> {{ project.domain }}</p>
+                        <p><strong>Assigned Guide:</strong> {{ project.guide.username|default:"Pending Allocation" }}</p>
+                        {% if project.marks %}
+                            <p><strong>Assigned Marks:</strong> {{ project.marks }}</p>
+                        {% endif %}
+                        
+                        {% if project.status == 'Allocated' %}
+                            <a href="{% url 'upload_milestone' project.id %}" class="btn btn-primary mt-2">Upload Milestone</a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-warning">
+                You have not registered any projects yet.
+            </div>
+            <a href="{% url 'register_project' %}" class="btn btn-primary">Register New Project</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2 class="mb-4">Guide Evaluation Portal</h2>
+        
+        {% if projects %}
+            <div class="row">
+                {% for project in projects %}
+                <div class="col-md-6 mb-4">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">{{ project.title }}</h5>
+                            <span class="badge bg-light text-dark">{{ project.status }}</span>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>Student:</strong> {{ project.student.username }}</p>
+                            <p><strong>Domain:</strong> {{ project.domain }}</p>
+                            
+                            <h6 class="mt-3">Milestones Uploaded:</h6>
+                            {% if project.milestones.all %}
+                                <ul>
+                                    {% for milestone in project.milestones.all %}
+                                        <li>
+                                            {{ milestone.stage }}: 
+                                            <a href="{{ milestone.document.url }}" target="_blank">View Document</a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <p class="text-muted">No milestones uploaded yet.</p>
+                            {% endif %}
+                            
+                            {% if project.status == 'Allocated' %}
+                                <a href="{% url 'guide_evaluation' project.id %}" class="btn btn-primary mt-2">Evaluate & Assign Marks</a>
+                            {% elif project.marks %}
+                                <div class="alert alert-info mt-2 mb-0">
+                                    Marks Assigned: <strong>{{ project.marks }}</strong>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                No teams have been assigned to you for evaluation yet.
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

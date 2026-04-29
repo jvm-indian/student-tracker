@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    $('#id_title').keyup(function() {
+    $('#project_title').keyup(function() {
         var query = $(this).val();
         if (query.length > 2) {
             $.ajax({
@@ -10,14 +10,17 @@ $(document).ready(function() {
                 dataType: 'json',
                 success: function(data) {
                     if (data.is_taken) {
-                        $('#title_error').text('This project title is already taken.').css('color', 'red');
+                        $('#title_status').text('This title is already taken.').css('color', 'red');
+                        $('#submit_btn').prop('disabled', true);
                     } else {
-                        $('#title_error').text('Title is available.').css('color', 'green');
+                        $('#title_status').text('Title is available!').css('color', 'green');
+                        $('#submit_btn').prop('disabled', false);
                     }
                 }
             });
         } else {
-            $('#title_error').text('');
+            $('#title_status').text('');
+            $('#submit_btn').prop('disabled', false);
         }
     });
 });

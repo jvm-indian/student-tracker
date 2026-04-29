@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2 class="mb-4">Admin Portal: Guide Allotment</h2>
+        <div class="mb-3">
+            <a href="{% url 'admin_approvals' %}" class="btn btn-outline-primary">Go to Approvals Hub</a>
+            <a href="{% url 'export_projects_csv' %}" class="btn btn-outline-success">Export Projects CSV</a>
+        </div>
+        
+        {% if projects %}
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Project Title</th>
+                            <th>Student</th>
+                            <th>Domain</th>
+                            <th>Allot Guide</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for project in projects %}
+                        <tr>
+                            <td>{{ project.title }}</td>
+                            <td>{{ project.student.username }}</td>
+                            <td>{{ project.domain }}</td>
+                            <td>
+                                <form method="post" class="d-flex align-items-center">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="project_id" value="{{ project.id }}">
+                                    {{ form.guide }}
+                                    <button type="submit" class="btn btn-sm btn-primary ms-2">Assign</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-success">
+                All projects have been allotted successfully. No pending allocations.
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
