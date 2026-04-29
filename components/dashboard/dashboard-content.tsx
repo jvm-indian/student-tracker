@@ -71,7 +71,7 @@ export function DashboardContent({ user, profile, tasks, announcements, unreadMe
           {greeting()}, {profile?.full_name || user.email?.split('@')[0]}
         </h1>
         <p className="text-muted-foreground">
-          {profile?.role === 'teacher' ? 'Teacher Dashboard' : 
+          {profile?.role === 'admin' ? 'Administration Dashboard' : 
            profile?.role === 'guide' ? 'Research Guide Dashboard' : 
            'Student Dashboard'} | Here&apos;s your research overview
         </p>
