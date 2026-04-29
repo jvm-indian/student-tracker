@@ -415,11 +415,20 @@ export function MessagesInterface({ currentUserId, conversations: initialConvers
             </div>
           </>
         ) : (
-          <div className="flex-1 flex items-center justify-center">
+          <div className="flex-1 flex flex-col items-center justify-center space-y-6">
             <div className="text-center text-muted-foreground">
               <MessageSquare className="w-16 h-16 mx-auto mb-4 opacity-50" />
               <h3 className="text-lg font-medium text-foreground mb-2">Select a conversation</h3>
-              <p className="text-sm">Choose a conversation from the sidebar or start a new one</p>
+              <p className="text-sm mb-6">Choose a conversation from the sidebar or start a new one</p>
+              
+              {chatWith && (
+                <Button 
+                  onClick={() => startNewConversation(chatWith)}
+                  className="bg-primary hover:bg-primary/90 mt-4"
+                >
+                  Start Chat with Selected User
+                </Button>
+              )}
             </div>
           </div>
         )}
