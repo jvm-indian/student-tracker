@@ -16,8 +16,8 @@ export default async function MessagesPage() {
     .from('conversations')
     .select(`
       *,
-      participant_1_profile:profiles!conversations_participant_1_fkey(id, full_name, email, role, avatar_url),
-      participant_2_profile:profiles!conversations_participant_2_fkey(id, full_name, email, role, avatar_url)
+      participant_1_profile:profiles!participant_1(id, full_name, email, role, avatar_url),
+      participant_2_profile:profiles!participant_2(id, full_name, email, role, avatar_url)
     `)
     .or(`participant_1.eq.${user.id},participant_2.eq.${user.id}`)
     .order('last_message_at', { ascending: false })

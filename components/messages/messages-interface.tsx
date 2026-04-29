@@ -14,6 +14,7 @@ import {
 import { cn } from '@/lib/utils'
 import { formatDistanceToNow } from 'date-fns'
 import { motion, AnimatePresence } from 'framer-motion'
+import { toast } from 'sonner'
 import {
   Dialog,
   DialogContent,
@@ -172,12 +173,18 @@ export function MessagesInterface({ currentUserId, conversations: initialConvers
       })
       .select(`
         *,
-        participant_1_profile:profiles!conversations_participant_1_fkey(id, full_name, email, role, avatar_url),
-        participant_2_profile:profiles!conversations_participant_2_fkey(id, full_name, email, role, avatar_url)
+        participant_1_profile:profiles!participant_1(id, full_name, email, role, avatar_url),
+        participant_2_profile:profiles!participant_2(id, full_name, email, role, avatar_url)
       `)
       .single()
 
-    if (!error && data) {
+    if (error) {
+      console.error('Error creating conversation:', error)
+      toast.error('Failed to create conversation')
+      return
+    }
+
+    if (data) {
       setConversations(prev => [data, ...prev])
       setSelectedConversation(data)
     }
@@ -187,13 +194,13 @@ export function MessagesInterface({ currentUserId, conversations: initialConvers
 
   // Auto-start conversation if chatWith param is present
   useEffect(() => {
-    if (chatWith && !hasAutoStarted && allUsers.length > 0) {
+    if (chatWith && !hasAutoStarted) {
       setHasAutoStarted(true)
       startNewConversation(chatWith)
-      // Clean up URL without triggering a full page reload
-      router.replace('/messages')
+      // Clean up URL without triggering a full page reload or Next.js navigation
+      window.history.replaceState(null, '', '/messages')
     }
-  }, [chatWith, hasAutoStarted, allUsers, router])
+  }, [chatWith, hasAutoStarted, router])
 
   const getRoleIcon = (role: string | null) => {
     switch (role) {
