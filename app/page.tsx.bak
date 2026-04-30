@@ -1,9 +1,9 @@
 import { createClient } from '@/lib/supabase/server'
-import { Web3Navbar } from '@/components/navigation/web3-navbar'
-import { Web3Hero } from '@/components/sections/web3-hero'
+import { Navbar } from '@/components/navigation/navbar'
+import { Footer } from '@/components/navigation/footer'
+import { HeroSection } from '@/components/sections/hero-section'
 import { FeaturesSection } from '@/components/sections/features-section'
 import { NewsSection } from '@/components/sections/news-section'
-import { Footer } from '@/components/navigation/footer'
 
 // Mock data for initial display (will be replaced with real data from Supabase)
 const mockNews = [
@@ -64,14 +64,12 @@ export default async function HomePage() {
   const news = newsData && newsData.length > 0 ? newsData : mockNews
 
   return (
-    <main className="min-h-screen bg-black text-white font-general-sans">
-      <Web3Navbar />
-      <Web3Hero />
-      <div className="bg-background text-foreground">
-        <FeaturesSection />
-        <NewsSection news={news} />
-        <Footer />
-      </div>
+    <main className="min-h-screen bg-background">
+      <Navbar user={user} />
+      <HeroSection />
+      <FeaturesSection />
+      <NewsSection news={news} />
+      <Footer />
     </main>
   )
 }

@@ -1,3 +1,4 @@
+@import url('https://api.fontshare.com/v2/css?f[]=general-sans@200,300,400,500,600,700&display=swap');
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
@@ -88,6 +89,7 @@
 }
 
 @theme inline {
+  --font-general-sans: 'General Sans', sans-serif;
   --font-sans: 'Geist', 'Geist Fallback';
   --font-mono: 'Geist Mono', 'Geist Mono Fallback';
   --color-background: var(--background);
@@ -150,5 +152,55 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+/* Web3 Hero Custom Classes */
+@layer utilities {
+  .text-gradient-144 {
+    background-image: linear-gradient(144.5deg, #FFFFFF 28%, rgba(0, 0, 0, 0) 115%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .pill-glow-dark {
+    position: relative;
+    border-radius: 9999px;
+    background-color: #000000;
+    border: 0.6px solid #FFFFFF;
+    overflow: hidden;
+  }
+
+  .pill-glow-dark::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 15%;
+    right: 15%;
+    height: 1px;
+    background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 100%);
+    box-shadow: 0 0 8px 2px rgba(255,255,255,0.4);
+    pointer-events: none;
+  }
+
+  .pill-glow-light {
+    position: relative;
+    border-radius: 9999px;
+    background-color: #FFFFFF;
+    border: 0.6px solid #FFFFFF;
+    overflow: hidden;
+  }
+
+  .pill-glow-light::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 15%;
+    right: 15%;
+    height: 1px;
+    background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%);
+    box-shadow: 0 0 12px 3px rgba(255,255,255,0.8);
+    pointer-events: none;
   }
 }
